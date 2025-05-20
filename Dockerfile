@@ -12,9 +12,9 @@ RUN mvn clean package -DskipTests
 FROM openjdk:17-slim
 WORKDIR /app
 
-# Установка yt-dlp
+# Установка Python и yt-dlp
 RUN apt-get update && \
-    apt-get install -y curl && \
+    apt-get install -y curl python3 && \
     curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && \
     chmod +x /usr/local/bin/yt-dlp && \
     apt-get purge -y curl && \
