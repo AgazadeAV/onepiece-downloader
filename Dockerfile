@@ -12,14 +12,9 @@ RUN mvn clean package -DskipTests
 FROM openjdk:17-slim
 WORKDIR /app
 
-# Установка yt-dlp
-RUN apt-get update && \
-    apt-get install -y curl && \
-    curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && \
-    chmod +x /usr/local/bin/yt-dlp && \
-    apt-get purge -y curl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# Установка yt-dlp (самодостаточный бинарник, не требует Python)
+ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp /usr/local/bin/yt-dlp
+RUN chmod +x /usr/local/bin/yt-dlp
 
 # Копируем собранный JAR-файл
 COPY --from=build /app/target/onepiece-downloader-0.0.1-SNAPSHOT.jar app.jar
