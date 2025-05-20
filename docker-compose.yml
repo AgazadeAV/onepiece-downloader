@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  onepiece-downloader:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: onepiece-downloader
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./downloads:/app/downloads
+    restart: unless-stopped
