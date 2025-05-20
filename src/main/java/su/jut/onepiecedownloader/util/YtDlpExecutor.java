@@ -34,12 +34,13 @@ public class YtDlpExecutor {
     private static ProcessBuilder getProcessBuilder(int episodeNumber, String quality) {
         String episodeUrl = String.format(AppConstants.BASE_EPISODE_URL, episodeNumber);
         String outputFileName = String.format(AppConstants.OUTPUT_FILE_PATTERN, episodeNumber, quality);
+        String outputPath = AppConstants.getDownloadPathFor(outputFileName);
 
         return new ProcessBuilder(
                 "yt-dlp",
                 "--referer", AppConstants.REFERER,
                 "-f", "bestvideo[height<=" + quality + "]+bestaudio/best[height<=" + quality + "]",
-                "-o", AppConstants.OUTPUT_DIR + "/" + outputFileName,
+                "-o", outputPath,
                 episodeUrl
         );
     }
