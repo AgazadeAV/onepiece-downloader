@@ -1,11 +1,13 @@
-package su.jut.onepiecedownloader.service;
+package su.jut.onepiecedownloader.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import su.jut.onepiecedownloader.dto.DownloadResponseDto;
 import su.jut.onepiecedownloader.exception.EpisodeNotAvailableException;
-import su.jut.onepiecedownloader.util.YtDlpExecutor;
+import su.jut.onepiecedownloader.service.EpisodeCacheService;
+import su.jut.onepiecedownloader.service.EpisodeDownloadService;
+import su.jut.onepiecedownloader.service.YtDlpExecutorService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +22,13 @@ public class EpisodeDownloadServiceImpl implements EpisodeDownloadService {
 
     private final static int THREAD_COUNT = 10;
 
-    private final YtDlpExecutor ytDlpExecutor;
+    private final YtDlpExecutorService ytDlpExecutorService;
     private final EpisodeCacheService episodeCacheService;
 
     @Override
     public DownloadResponseDto downloadOne(int episodeNumber, String quality) {
         checkEpisodeLimit(episodeNumber);
-        ytDlpExecutor.download(episodeNumber, quality);
+        ytDlpExecutorService.download(episodeNumber, quality);
         return new DownloadResponseDto("Episode " + episodeNumber + " downloaded in " + quality + "p", 1);
     }
 
@@ -39,7 +41,7 @@ public class EpisodeDownloadServiceImpl implements EpisodeDownloadService {
 
         for (int i = start; i <= end; i++) {
             final int episodeNumber = i;
-            futures.add(executor.submit(() -> ytDlpExecutor.download(episodeNumber, quality)));
+            futures.add(executor.submit(() -> ytDlpExecutorService.download(episodeNumber, quality)));
         }
 
         for (Future<?> future : futures) {
@@ -65,7 +67,7 @@ public class EpisodeDownloadServiceImpl implements EpisodeDownloadService {
 
         for (int i = 1; i <= total; i++) {
             final int episodeNumber = i;
-            futures.add(executor.submit(() -> ytDlpExecutor.download(episodeNumber, quality)));
+            futures.add(executor.submit(() -> ytDlpExecutorService.download(episodeNumber, quality)));
         }
 
         for (Future<?> future : futures) {
@@ -81,11 +83,15 @@ public class EpisodeDownloadServiceImpl implements EpisodeDownloadService {
         return new DownloadResponseDto("All available episodes downloaded in " + quality + "p", total);
     }
 
-
     @Override
     public DownloadResponseDto getAvailableEpisodeCount() {
         int total = episodeCacheService.getTotalEpisodes();
         return new DownloadResponseDto("Total available episodes: " + total, total);
+    }
+
+    @Override
+    public void scanAllEpisodes() {
+        episodeCacheService.scanAllEpisodes();
     }
 
     private void checkEpisodeLimit(int episodeNumber) {

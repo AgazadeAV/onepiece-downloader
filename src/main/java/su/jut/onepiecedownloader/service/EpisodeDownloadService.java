@@ -10,4 +10,6 @@ public interface EpisodeDownloadService {
     DownloadResponseDto downloadAll(String quality);
 
     DownloadResponseDto getAvailableEpisodeCount();
+
+    void scanAllEpisodes();
 }

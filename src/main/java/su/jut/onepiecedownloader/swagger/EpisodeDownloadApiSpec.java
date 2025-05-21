@@ -43,4 +43,11 @@ public interface EpisodeDownloadApiSpec {
                     content = @Content(schema = @Schema(implementation = DownloadResponseDto.class)))
     })
     ResponseEntity<DownloadResponseDto> getAvailableEpisodes();
+
+    @Operation(summary = "Сканировать все эпизоды", description = "Запускает полное сканирование всех доступных эпизодов")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Сканирование запущено",
+                    content = @Content(schema = @Schema(implementation = DownloadResponseDto.class)))
+    })
+    ResponseEntity<DownloadResponseDto> triggerFullScan();
 }

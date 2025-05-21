@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-episode-links-table
+      author: azer agazade
+      changes:
+        - createTable:
+            tableName: episode_links
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: episode_number
+                  type: INT
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: episode_title
+                  type: VARCHAR(255)
+              - column:
+                  name: episode_url
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: available_qualities
+                  type: TEXT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP

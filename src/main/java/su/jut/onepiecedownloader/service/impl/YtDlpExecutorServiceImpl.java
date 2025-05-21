@@ -1,16 +1,19 @@
-package su.jut.onepiecedownloader.util;
+package su.jut.onepiecedownloader.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import su.jut.onepiecedownloader.exception.YtDlpException;
+import su.jut.onepiecedownloader.service.YtDlpExecutorService;
+import su.jut.onepiecedownloader.util.AppConstants;
 
 import java.io.File;
 import java.io.IOException;
 
 @Slf4j
 @Component
-public class YtDlpExecutor {
+public class YtDlpExecutorServiceImpl implements YtDlpExecutorService {
 
+    @Override
     public void download(int episodeNumber, String quality) {
         ProcessBuilder processBuilder = getProcessBuilder(episodeNumber, quality);
 

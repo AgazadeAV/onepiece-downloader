@@ -1,9 +1,28 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   application:
     name: onepiece-downloader
+
+  datasource:
+    url: jdbc:postgresql://onepiece-db:5432/onepiece_db
+    username: onepiece
+    password: onepiece
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+  docker:
+    compose:
+      enabled: true
+      file: ./docker-compose.yml
 
 springdoc:
   api-docs:

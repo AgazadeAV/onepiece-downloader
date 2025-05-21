@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-episode-number-index
+      author: azer agazade
+      changes:
+        - createIndex:
+            tableName: episode_links
+            indexName: idx_episode_links_episode_number
+            unique: true
+            columns:
+              - column:
+                  name: episode_number

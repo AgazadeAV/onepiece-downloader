@@ -1,6 +1,17 @@
-version: "3.8"
-
 services:
+  onepiece-db:
+    image: postgres:latest
+    container_name: onepiece-db
+    environment:
+      POSTGRES_DB: onepiece_db
+      POSTGRES_USER: onepiece
+      POSTGRES_PASSWORD: onepiece
+    volumes:
+      - onepiece-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
   onepiece-downloader:
     build:
       context: .
@@ -10,4 +21,13 @@ services:
       - "8080:8080"
     volumes:
       - ~/Downloads:/app/downloads
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://onepiece-db:5432/onepiece_db
+      SPRING_DATASOURCE_USERNAME: onepiece
+      SPRING_DATASOURCE_PASSWORD: onepiece
+    depends_on:
+      - onepiece-db
     restart: unless-stopped
+
+volumes:
+  onepiece-data:

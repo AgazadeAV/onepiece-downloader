@@ -40,4 +40,10 @@ public class EpisodeDownloadController implements EpisodeDownloadApiSpec {
     public ResponseEntity<DownloadResponseDto> getAvailableEpisodes() {
         return ResponseEntity.ok(episodeDownloadService.getAvailableEpisodeCount());
     }
+
+    @GetMapping("/scan")
+    public ResponseEntity<DownloadResponseDto> triggerFullScan() {
+        episodeDownloadService.scanAllEpisodes();
+        return ResponseEntity.ok(new DownloadResponseDto("Full scan triggered successfully", 0));
+    }
 }
