@@ -91,7 +91,7 @@ public class EpisodeDownloadServiceImpl implements EpisodeDownloadService {
 
     @Override
     public void scanAllEpisodes() {
-        episodeCacheService.scanAllEpisodes();
+        episodeCacheService.scanAndSaveAllEpisodes();
     }
 
     private void checkEpisodeLimit(int episodeNumber) {

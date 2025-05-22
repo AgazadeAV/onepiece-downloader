@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EpisodeCacheServiceImpl implements EpisodeCacheService {
 
-    private final EpisodeLinkRepository repository;
+    private final EpisodeLinkRepository episodeLinkRepository;
     private final EpisodeLinkMapper episodeLinkMapper;
 
     private static final int TIMEOUT_MS = 2500;
@@ -32,7 +32,7 @@ public class EpisodeCacheServiceImpl implements EpisodeCacheService {
 
     @Override
     @Transactional
-    public void scanAllEpisodes() {
+    public void scanAndSaveAllEpisodes() {
         log.info("📡 Старт сканирования эпизодов...");
 
         int episode = 1;
@@ -45,18 +45,16 @@ public class EpisodeCacheServiceImpl implements EpisodeCacheService {
         log.info("✅ Сканирование завершено. Последний найденный эпизод: {}", episode - 1);
     }
 
-
     @Override
     public int getTotalEpisodes() {
-        return (int) repository.count();
+        return (int) episodeLinkRepository.count();
     }
-
 
     @Override
     @Transactional
     @Scheduled(cron = "0 59 23 * * *")
-    public void checkForNewEpisode() {
-        repository.findTopByOrderByEpisodeNumberDesc().ifPresentOrElse(last -> {
+    public void checkForNewEpisodeAndSave() {
+        episodeLinkRepository.findTopByOrderByEpisodeNumberDesc().ifPresentOrElse(last -> {
             int next = last.getEpisodeNumber() + 1;
             if (episodeExists(next)) {
                 saveIfNotExists(next);
@@ -66,12 +64,12 @@ public class EpisodeCacheServiceImpl implements EpisodeCacheService {
             }
         }, () -> {
             log.warn("📛 В базе нет ни одного эпизода, запустим полное сканирование");
-            scanAllEpisodes();
+            scanAndSaveAllEpisodes();
         });
     }
 
     private boolean episodeExists(int episode) {
-        if (repository.existsByEpisodeNumber(episode)) {
+        if (episodeLinkRepository.existsByEpisodeNumber(episode)) {
             log.info("📦 Эпизод {} уже есть в базе — пропускаем HTTP-запрос", episode);
             return true;
         }
@@ -114,7 +112,7 @@ public class EpisodeCacheServiceImpl implements EpisodeCacheService {
     }
 
     private void saveIfNotExists(int episode) {
-        if (!repository.existsByEpisodeNumber(episode)) {
+        if (!episodeLinkRepository.existsByEpisodeNumber(episode)) {
             String url = String.format(AppConstants.BASE_EPISODE_URL, episode);
 
             try {
@@ -131,7 +129,7 @@ public class EpisodeCacheServiceImpl implements EpisodeCacheService {
                         .build();
 
                 EpisodeLink entity = episodeLinkMapper.toEntity(dto);
-                repository.save(entity);
+                episodeLinkRepository.save(entity);
                 log.info("💾 Сохранён эпизод {}", episode);
 
             } catch (Exception e) {

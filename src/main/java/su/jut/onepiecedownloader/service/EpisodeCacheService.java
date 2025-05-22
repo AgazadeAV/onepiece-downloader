@@ -1,9 +1,9 @@
 package su.jut.onepiecedownloader.service;
 
 public interface EpisodeCacheService {
-    void scanAllEpisodes();
+    void scanAndSaveAllEpisodes();
 
     int getTotalEpisodes();
 
-    void checkForNewEpisode();
+    void checkForNewEpisodeAndSave();
 }
