@@ -2,15 +2,18 @@ package su.jut.onepiecedownloader.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import su.jut.onepiecedownloader.swagger.schema.DownloadResponseDtoSchema;
+import su.jut.onepiecedownloader.swagger.schema.AvailableEpisodesDtoSchema;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(implementation = DownloadResponseDtoSchema.class)
-public class DownloadResponseDto {
-    private String message;
+@Schema(implementation = AvailableEpisodesDtoSchema.class)
+public class AvailableEpisodesDto {
+
     private int total;
+    private String message;
 }

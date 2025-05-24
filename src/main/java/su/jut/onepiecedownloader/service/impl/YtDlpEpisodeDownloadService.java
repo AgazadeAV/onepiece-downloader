@@ -3,7 +3,7 @@ package su.jut.onepiecedownloader.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import su.jut.onepiecedownloader.exception.YtDlpException;
-import su.jut.onepiecedownloader.service.YtDlpExecutorService;
+import su.jut.onepiecedownloader.service.EpisodeDownloadService;
 import su.jut.onepiecedownloader.util.AppConstants;
 
 import java.io.File;
@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-public class YtDlpExecutorServiceImpl implements YtDlpExecutorService {
+public class YtDlpEpisodeDownloadService implements EpisodeDownloadService {
 
     @Override
     public void download(int episodeNumber, String quality) {
@@ -21,13 +21,13 @@ public class YtDlpExecutorServiceImpl implements YtDlpExecutorService {
         processBuilder.inheritIO();
 
         try {
-            log.info("🎬 Downloading episode {} in {}p...", episodeNumber, quality);
+            log.info("🎬 Загружаем эпизод {} в качестве {}p...", episodeNumber, quality);
             Process process = processBuilder.start();
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                throw new YtDlpException("yt-dlp exited with code: " + exitCode);
+                throw new YtDlpException("yt-dlp завершился с кодом: " + exitCode);
             }
-            log.info("✅ Episode {} downloaded!", episodeNumber);
+            log.info("✅ Эпизод {} успешно загружен!", episodeNumber);
         } catch (IOException | InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new YtDlpException("Ошибка при запуске yt-dlp: " + e.getMessage());

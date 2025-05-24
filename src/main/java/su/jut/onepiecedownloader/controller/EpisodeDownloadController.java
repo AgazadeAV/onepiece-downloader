@@ -7,43 +7,58 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import su.jut.onepiecedownloader.dto.DownloadResponseDto;
-import su.jut.onepiecedownloader.service.EpisodeDownloadService;
+import su.jut.onepiecedownloader.dto.AvailableEpisodesDto;
+import su.jut.onepiecedownloader.dto.DownloadOneResponseDto;
+import su.jut.onepiecedownloader.dto.DownloadRangeResponseDto;
+import su.jut.onepiecedownloader.dto.ScanResultDto;
+import su.jut.onepiecedownloader.service.EpisodeManagerService;
 import su.jut.onepiecedownloader.swagger.EpisodeDownloadApiSpec;
 
 @RestController
-@RequestMapping("/episodes")
+@RequestMapping(EpisodeDownloadController.BASE_PATH)
 @RequiredArgsConstructor
 public class EpisodeDownloadController implements EpisodeDownloadApiSpec {
 
-    private final EpisodeDownloadService episodeDownloadService;
+    public static final String BASE_PATH = "/episodes";
+    public static final String DOWNLOAD_ONE = "/{episodeNumber}";
+    public static final String DOWNLOAD_RANGE = "/range";
+    public static final String DOWNLOAD_ALL = "/all";
+    public static final String AVAILABLE = "/available";
+    public static final String SCAN = "/scan";
+    public static final String CHECK_NEW_EPISODE = "/check-new-episode";
 
-    @GetMapping("/{episodeNumber}")
-    public ResponseEntity<DownloadResponseDto> downloadOne(@PathVariable int episodeNumber,
-                                                           @RequestParam(defaultValue = "360") String quality) {
-        return ResponseEntity.ok(episodeDownloadService.downloadOne(episodeNumber, quality));
+    private final EpisodeManagerService episodeManagerService;
+
+    @GetMapping(DOWNLOAD_ONE)
+    public ResponseEntity<DownloadOneResponseDto> downloadOne(@PathVariable int episodeNumber,
+                                                              @RequestParam String quality) {
+        return ResponseEntity.ok(episodeManagerService.downloadOne(episodeNumber, quality));
     }
 
-    @GetMapping("/range")
-    public ResponseEntity<DownloadResponseDto> downloadRange(@RequestParam int start,
-                                                             @RequestParam int end,
-                                                             @RequestParam(defaultValue = "360") String quality) {
-        return ResponseEntity.ok(episodeDownloadService.downloadRange(start, end, quality));
+    @GetMapping(DOWNLOAD_RANGE)
+    public ResponseEntity<DownloadRangeResponseDto> downloadRange(@RequestParam int start,
+                                                                  @RequestParam int end,
+                                                                  @RequestParam String quality) {
+        return ResponseEntity.ok(episodeManagerService.downloadRange(start, end, quality));
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<DownloadResponseDto> downloadAll(@RequestParam(defaultValue = "360") String quality) {
-        return ResponseEntity.ok(episodeDownloadService.downloadAll(quality));
+    @GetMapping(DOWNLOAD_ALL)
+    public ResponseEntity<DownloadRangeResponseDto> downloadAll(@RequestParam String quality) {
+        return ResponseEntity.ok(episodeManagerService.downloadAll(quality));
     }
 
-    @GetMapping("/available")
-    public ResponseEntity<DownloadResponseDto> getAvailableEpisodes() {
-        return ResponseEntity.ok(episodeDownloadService.getAvailableEpisodeCount());
+    @GetMapping(AVAILABLE)
+    public ResponseEntity<AvailableEpisodesDto> getAvailableEpisodes() {
+        return ResponseEntity.ok(episodeManagerService.getAvailableEpisodeCount());
     }
 
-    @GetMapping("/scan")
-    public ResponseEntity<DownloadResponseDto> triggerFullScan() {
-        episodeDownloadService.scanAllEpisodes();
-        return ResponseEntity.ok(new DownloadResponseDto("Full scan triggered successfully", 0));
+    @GetMapping(SCAN)
+    public ResponseEntity<ScanResultDto> scanAndSaveMissingEpisodes() {
+        return ResponseEntity.ok(episodeManagerService.scanAndSaveMissingEpisodes());
+    }
+
+    @GetMapping(CHECK_NEW_EPISODE)
+    public ResponseEntity<ScanResultDto> checkNewEpisode() {
+        return ResponseEntity.ok(episodeManagerService.checkForNewEpisodeAndSave());
     }
 }

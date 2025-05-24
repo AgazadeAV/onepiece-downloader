@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication
 public class OnePieceDownloaderApplication {
+
 	public static void main(String[] args) {
 		SpringApplication.run(OnePieceDownloaderApplication.class, args);
 	}

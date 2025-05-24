@@ -8,7 +8,10 @@ import java.util.Optional;
 
 @Repository
 public interface EpisodeLinkRepository extends JpaRepository<EpisodeLink, Integer> {
+
     boolean existsByEpisodeNumber(int episode);
 
     Optional<EpisodeLink> findTopByOrderByEpisodeNumberDesc();
+
+    Optional<EpisodeLink> findByEpisodeNumber(Integer episodeNumber);
 }
