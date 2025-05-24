@@ -21,7 +21,7 @@ public class YtDlpEpisodeDownloadService implements EpisodeDownloadService {
         processBuilder.inheritIO();
 
         try {
-            log.info("🎬 Загружаем эпизод {} в качестве {}p...", episodeNumber, quality);
+            log.info("🎬 Загружаем эпизод {} в качестве {}...", episodeNumber, quality);
             Process process = processBuilder.start();
             int exitCode = process.waitFor();
             if (exitCode != 0) {
