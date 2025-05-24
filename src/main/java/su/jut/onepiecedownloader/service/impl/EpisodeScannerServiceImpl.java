@@ -108,7 +108,7 @@ public class EpisodeScannerServiceImpl implements EpisodeScannerService {
                         .message("Новый эпизод пока не найден")
                         .saved(0)
                         .failed(0)
-                        .lastEpisodeOnSite(next)
+                        .lastEpisodeOnSite(next - 1)
                         .build();
             }
         }).orElseGet(() -> {

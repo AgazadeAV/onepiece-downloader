@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 public class DownloadRangeResponseDtoSchema {
 
-    @Schema(description = "Описание результата загрузки", example = "Скачано 50 из 100 эпизодов")
+    @Schema(description = "Описание результата загрузки", example = "Скачано 50 из 100 эпизодов в качестве 360p")
     private String message;
 
     @Schema(description = "Сколько эпизодов было запрошено на скачивание", example = "1000")

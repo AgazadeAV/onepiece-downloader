@@ -37,7 +37,7 @@ public class EpisodeManagerServiceImpl implements EpisodeManagerService {
         checkEpisodeExists(episodeNumber);
         ytDlpEpisodeDownloadService.download(episodeNumber, quality);
         return DownloadOneResponseDto.builder()
-                .message("Эпизод " + episodeNumber + " успешно загружен в качестве " + quality + "p")
+                .message("Эпизод " + episodeNumber + " успешно загружен в качестве " + quality)
                 .total(episodeNumber)
                 .build();
     }
@@ -112,7 +112,7 @@ public class EpisodeManagerServiceImpl implements EpisodeManagerService {
         int success = total - failed;
 
         return DownloadRangeResponseDto.builder()
-                .message("Скачано " + success + " из " + total + " эпизодов")
+                .message("Скачано " + success + " из " + total + " эпизодов в качестве " + quality)
                 .totalRequested(total)
                 .totalSuccess(success)
                 .totalFailed(failed)
